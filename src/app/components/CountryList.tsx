@@ -1,12 +1,5 @@
 "use client";
-import React, { useState, useRef } from "react";
-import USA from "../../assets/pngtree-rounded-flag-of-usa-png-image_8344463.png";
-import Spain from "../../assets/istockphoto-1313888685-612x612.jpg";
-import France from "../../assets/france.png";
-import China from "../../assets/china.png";
-import Japan from "../../assets/japan.jpg";
-import Russia from "../../assets/russia.jpg";
-import Germany from "../../assets/germany.webp";
+import React, { useState, useRef, TouchEvent } from "react";
 import Image, { StaticImageData } from "next/image";
 
 interface FlagData {
@@ -18,37 +11,37 @@ interface FlagData {
 const CountryList: React.FC = () => {
   const flags: FlagData[] = [
     {
-      flag: USA,
-      language: "English",
-      active: false,
-    },
-    {
-      flag: Spain,
+      flag: require("../../assets/istockphoto-1313888685-612x612.jpg"),
       language: "Spanish",
       active: false,
     },
     {
-      flag: France,
+      flag: require("../../assets/france.png"),
       language: "French",
       active: false,
     },
     {
-      flag: China,
+      flag: require("../../assets/china.png"),
       language: "Chinese",
       active: false,
     },
     {
-      flag: Japan,
+      flag: require("../../assets/pngtree-rounded-flag-of-usa-png-image_8344463.png"),
+      language: "English",
+      active: false,
+    },
+    {
+      flag: require("../../assets/japan.jpg"),
       language: "Japanese",
       active: false,
     },
     {
-      flag: Russia,
+      flag: require("../../assets/russia.jpg"),
       language: "Russian",
       active: false,
     },
     {
-      flag: Germany,
+      flag: require("../../assets/germany.webp"),
       language: "German",
       active: false,
     },
@@ -57,59 +50,78 @@ const CountryList: React.FC = () => {
   const [active, setActive] = useState<number>(3);
   const startXRef = useRef<number | null>(null);
 
-  const handleTouchStart = (index: number) => (event: React.TouchEvent) => {
+  const handleTouchStart = (event: TouchEvent) => {
     startXRef.current = event.touches[0].clientX;
   };
 
-  const handleTouchEnd = (index: number) => (event: React.TouchEvent) => {
-    if (active === 0 || active === 6) {
+  const handleTouchEnd = (event: TouchEvent) => {
+    if (startXRef.current === null) {
       return;
     }
 
     const endX = event.changedTouches[0].clientX;
-    const diffX = startXRef.current! - endX;
-    if (diffX > 100) {
+    const diffX = startXRef.current - endX;
+    const threshold = 100;
+
+    if (diffX > threshold) {
+      // Right swipe, decrease active by 1
       setActive((prev) => (prev === 0 ? prev : prev - 1));
-    } else if (diffX < -100) {
+    } else if (diffX < -threshold) {
+      // Left swipe, increase active by 1
       setActive((prev) => (prev === flags.length - 1 ? prev : prev + 1));
     }
+
+    startXRef.current = null;
+  };
+
+  const renderFlagElement = (index: number) => {
+    if (index < 0 || index >= flags.length) {
+      return null;
+    }
+
+    const activeClass = index === active ? "border-2 border-blue-500" : "";
+    let size = 30;
+
+    // Calculate the size based on the distance from the active index
+    const distance = Math.abs(index - active);
+    if (distance === 0) {
+      size = 52;
+    } else if (distance === 1) {
+      size = 40;
+    } else if (distance === 2) {
+      size = 30;
+    }
+
+    // Adjust the size for the first and last divs
+    if (index === active - 3 || index === active + 3) {
+      size = 20;
+    }
+
+    return (
+      <div
+        key={index}
+        className={`w-[${size}px] rounded-full ${activeClass} my-5`}
+        onClick={() => setActive(index)}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
+        <Image
+          src={flags[index].flag}
+          alt="flag"
+          className="object-contain rounded-full"
+          width={size}
+          height={size}
+        />
+      </div>
+    );
   };
 
   return (
     <div className="w-[350px] my-4">
       <div className="flex items-center justify-center gap-2">
-        {[
-          active - 3,
-          active - 2,
-          active - 1,
-          active,
-          active + 1,
-          active + 2,
-          active + 3,
-        ].map((index) => {
-          if (index < 0 || index >= flags.length) {
-            return null;
-          }
-          return (
-            <div
-              key={index}
-              className={`w-[${index === active ? 52 : 30}px] rounded-full ${
-                index === active ? "border-2 border-blue-500" : ""
-              }`}
-              onClick={() => setActive(index)}
-              onTouchStart={handleTouchStart(index)}
-              onTouchEnd={handleTouchEnd(index)}
-            >
-              <Image
-                src={flags[index].flag}
-                alt="flag"
-                className="object-contain rounded-full"
-                width={index === active ? 52 : 30}
-                height={index === active ? 52 : 30}
-              />
-            </div>
-          );
-        })}
+        {Array.from({ length: 7 }, (_, index) =>
+          renderFlagElement(active - 3 + index)
+        )}
       </div>
       <h2 className="text-white my-3 text-center text-2xl">
         {flags[active].language}
