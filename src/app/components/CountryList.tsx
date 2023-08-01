@@ -61,13 +61,11 @@ const CountryList: React.FC = () => {
 
     const endX = event.changedTouches[0].clientX;
     const diffX = startXRef.current - endX;
-    const threshold = 100;
+    const threshold = 20;
 
     if (diffX > threshold) {
-      // Right swipe, decrease active by 1
       setActive((prev) => (prev === 0 ? prev : prev - 1));
     } else if (diffX < -threshold) {
-      // Left swipe, increase active by 1
       setActive((prev) => (prev === flags.length - 1 ? prev : prev + 1));
     }
 
@@ -82,7 +80,6 @@ const CountryList: React.FC = () => {
     const activeClass = index === active ? "border-2 border-blue-500" : "";
     let size = 30;
 
-    // Calculate the size based on the distance from the active index
     const distance = Math.abs(index - active);
     if (distance === 0) {
       size = 52;
@@ -92,7 +89,6 @@ const CountryList: React.FC = () => {
       size = 30;
     }
 
-    // Adjust the size for the first and last divs
     if (index === active - 3 || index === active + 3) {
       size = 20;
     }
