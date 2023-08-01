@@ -64,9 +64,9 @@ const CountryList: React.FC = () => {
     const threshold = 20;
 
     if (diffX > threshold && active > 0) {
-      setActive((prev) => prev - 1);
-    } else if (diffX < -threshold && active < flags.length - 1) {
       setActive((prev) => prev + 1);
+    } else if (diffX < -threshold && active < flags.length - 1) {
+      setActive((prev) => prev - 1);
     }
 
     startXRef.current = null;
@@ -120,8 +120,22 @@ const CountryList: React.FC = () => {
         )}
       </div>
       <h2 className="text-white my-3 text-center text-2xl">
-        {flags[active].language}
+        {flags[active]?.language || "Language Not Found"}
       </h2>
+      <style jsx>{`
+        .flag-container {
+          transition: width 0.8s ease;
+        }
+        .flag-image {
+          transition: transform 0.8s ease;
+        }
+        .flag-container.border-2 {
+          border-color: #4ea5d9;
+        }
+        .flag-image.rounded-full {
+          border-radius: 50%;
+        }
+      `}</style>
     </div>
   );
 };
