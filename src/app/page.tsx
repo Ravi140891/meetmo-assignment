@@ -1,4 +1,3 @@
-import Image from "next/image";
 import TranslationScreen from "./components/TranslationScreen";
 
 export default function Home() {

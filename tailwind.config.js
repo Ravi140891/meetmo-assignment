@@ -16,6 +16,18 @@ module.exports = {
     fontFamily: {
       man: ["Manrope", "sans-serif"],
     },
+    boxShadow: {
+      xl: ["-2px -2px 7px 0px grey", "1px -4px 7px -1px lightgrey"],
+    },
+    backgroundImage: {
+      custom: [
+        "linear-gradient(#1E2021,#202124), radial-gradient(#37383D,#1F2023), linear-gradient(#D9D9D9,#FFFFFF)",
+      ],
+      button: [
+        "linear-gradient(#000000,#FFFFFF), radial-gradient(#545659,#232629)",
+      ],
+      borderColor: "linear-gradient(#30E5D3,#6B48FF)",
+    },
   },
   plugins: [],
 };
