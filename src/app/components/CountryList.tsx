@@ -62,13 +62,15 @@ const CountryList: React.FC = () => {
   };
 
   const handleTouchEnd = (index: number) => (event: React.TouchEvent) => {
+    if (active === 0 || active === 6) {
+      return;
+    }
+
     const endX = event.changedTouches[0].clientX;
     const diffX = startXRef.current! - endX;
     if (diffX > 100) {
-      // Right swipe, decrease active by 1
       setActive((prev) => (prev === 0 ? prev : prev - 1));
     } else if (diffX < -100) {
-      // Left swipe, increase active by 1
       setActive((prev) => (prev === flags.length - 1 ? prev : prev + 1));
     }
   };
