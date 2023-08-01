@@ -63,9 +63,9 @@ const CountryList: React.FC = () => {
     const diffX = startXRef.current - endX;
     const threshold = 20;
 
-    if (diffX > threshold && active > 0) {
+    if (diffX > threshold && active > 0 && active < flags.length) {
       setActive((prev) => prev + 1);
-    } else if (diffX < -threshold && active < flags.length - 1) {
+    } else if (diffX < -threshold && active < flags.length && active > 0) {
       setActive((prev) => prev - 1);
     }
 
