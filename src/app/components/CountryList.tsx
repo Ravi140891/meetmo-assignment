@@ -7,10 +7,16 @@ import China from "../../assets/china.png";
 import Japan from "../../assets/japan.jpg";
 import Russia from "../../assets/russia.jpg";
 import Germany from "../../assets/germany.webp";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 
-const CountryList = () => {
-  const flags = [
+interface FlagData {
+  flag: StaticImageData;
+  language: string;
+  active: boolean;
+}
+
+const CountryList: React.FC = () => {
+  const flags: FlagData[] = [
     {
       flag: USA,
       language: "English",
@@ -48,16 +54,16 @@ const CountryList = () => {
     },
   ];
 
-  const [active, setActive] = useState(3);
-  const startXRef = useRef(null);
+  const [active, setActive] = useState<number>(3);
+  const startXRef = useRef<number | null>(null);
 
-  const handleTouchStart = (index) => (event) => {
+  const handleTouchStart = (index: number) => (event: React.TouchEvent) => {
     startXRef.current = event.touches[0].clientX;
   };
 
-  const handleTouchEnd = (index) => (event) => {
+  const handleTouchEnd = (index: number) => (event: React.TouchEvent) => {
     const endX = event.changedTouches[0].clientX;
-    const diffX = startXRef.current - endX;
+    const diffX = startXRef.current! - endX;
     if (diffX > 100) {
       // Right swipe, decrease active by 1
       setActive((prev) => (prev === 0 ? prev : prev - 1));
